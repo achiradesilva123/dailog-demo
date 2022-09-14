@@ -5,60 +5,62 @@ import IMG from "../Assets/prescription.png";
 
 class Home extends Component {
 
-    state ={
-        markers : [],
-        code : [],
-        count : 0
+    state = {
+        markers: [],
+        code: [],
+        count: 0
     };
 
 
+    handleClick = (index) => {
+       this.setState( {
+           markers : this.state.markers.splice(index,1)
+       })
+
+
+
+    };
+
     render() {
 
-        const extra = (
-            <div> {this.state.markers.map((a, i) => (
-                <Label as='a'>
-                    Tag
-                    <Icon name='delete' />
-                </Label>
-            )
-        )}</div>
-        );
-
-        const CustomMarker = () => {
-
-            let code = this.state.code[this.state.count-1];
-
+        const CustomMarker = (props) => {
             return (
                 <div>
-                    <Label color='yellow' pointing='below'>{code}</Label>
+                    <Label color='yellow' pointing='below' >Drug {props.itemNumber + 1}</Label>
                 </div>
             );
         };
 
+        const extra = (
+            <div> {this.state.markers.map((a, i) => (
+                    <Label as='a' key= {i} onClick={ () => this.handleClick(i) } >
+                        Drug {i + 1}
+                        <Icon name='delete'/>
+                    </Label>
+                )
+            )}</div>
+        );
+
         return (
-            <Grid  divided='horizontally'>
+            <Grid divided='horizontally'>
                 <Grid.Row columns={1}>
                     <Grid.Column centered width={16}>
                         <Card centered
-                              image={() => ( <ImageMarker
+                              image={() => (<ImageMarker
                                   src={IMG}
                                   markers={this.state.markers}
-                                  onAddMarker={(marker) =>{
-
-                                      this.setState(prevState => ({markers :  [...prevState.markers, marker]}));
-                                      this.setState({count : this.state.count+1});
-                                      this.setState(prev => ({
-                                          code : [...prev.code,"DR"+this.state.count]
+                                  onAddMarker={(marker) => {
+                                      this.setState(prevState => ({
+                                          markers: [...prevState.markers, marker],
+                                          count: this.state.count + 1,
+                                          code: [...prevState.code, "DR" + this.state.count]
                                       }));
-
-                                      // setCode(...code,"DR");
-                                     }
                                   }
+                                  }
+
                                   markerComponent={CustomMarker}
                               />)}
-                            // header='Elliot Baker'
-                            // meta='Friend'
-                            // description='Elliot is a sound engineer living in Nashville who enjoys playing guitar and hanging with his cat.'
+
                               extra={extra}
                         />
                     </Grid.Column>
